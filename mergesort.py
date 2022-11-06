@@ -1,7 +1,6 @@
 from multiprocessing import shared_memory
 import os
 
-
 def merge(vetor, p, meio, u):
   L = []
   R = []
@@ -9,6 +8,7 @@ def merge(vetor, p, meio, u):
     L.append(vetor[i])
   for i in range(meio + 1, u + 1):
     R.append(vetor[i])
+  print(L,R)
   k = p
   while (len(L) > 0 and len(R) > 0):
     if (int(L[0]) < int(R[0])):
@@ -29,13 +29,15 @@ def mergeSort(vetor, p, u):
     meio = int((p + u) // 2)
     mergeSort(vetor, p, meio)
     mergeSort(vetor, meio + 1, u)
-    if (os.fork() != 0):
-      merge(vetor, p, meio, u)
-      exit(0)
+    merge(vetor, p, meio, u)
 
 
 print("Informe um vetor de numeros", end=" ")
 vetor = list(map(int, input().split()))
-vetor = shared_memory.ShareableList(vetor)
-mergeSort(vetor, 0, len(vetor) - 1)
-print(vetor)
+if(os.fork()==0):
+  vetor = shared_memory.ShareableList(vetor)
+  vetor.shm.unlink()
+  mergeSort(vetor, 0, len(vetor) - 1)
+  print(vetor)
+  exit(0)
+os.wait()
