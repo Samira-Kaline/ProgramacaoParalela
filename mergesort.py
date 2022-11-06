@@ -8,7 +8,6 @@ def merge(vetor, p, meio, u):
     L.append(vetor[i])
   for i in range(meio + 1, u + 1):
     R.append(vetor[i])
-  print(L,R)
   k = p
   while (len(L) > 0 and len(R) > 0):
     if (int(L[0]) < int(R[0])):
